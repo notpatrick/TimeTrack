@@ -448,6 +448,7 @@ log.txt
 *.sublime-project
 *.sublime-workspace
 .vscode/
+typings/
 
 .tmp/
 .versions/
