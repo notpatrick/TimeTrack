@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Overview</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-card *ngFor="let activity of _state.activities" color="{{_state.currentActivity == activity  ? 'secondary' : ''}}" (swipe)="swiped(activity)">
+
+      <ion-card-header>
+        {{activity !== undefinde ? activity.name: ''}}
+
+        <ion-icon name="{{_state.currentActivity == activity ? 'pause' : 'play'}}" style="float: right" (click)="activityClick(activity)"></ion-icon>
+      </ion-card-header>
+
+    </ion-card>
+  </ion-list>
+  <ion-fab right bottom>
+    <button ion-fab color="primary" (click)="addClick()">
+      <ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

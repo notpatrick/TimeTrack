@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Create Activity</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+
+    <ion-item>
+      <ion-input type="text" placeholder="Username" [(ngModel)]="name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Category</ion-label>
+      <ion-select [(ngModel)]="type">
+        <ion-option *ngFor="let t of typeOptions" value="{{t}}">{{t}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+  </ion-list>
+
+  <div style="display:flex">
+    <button ion-button color="danger" style="flex-grow:1" (click)="cancelClick()">Cancel</button>
+    <button ion-button color="secondary" style="flex-grow:1" (click)="addClick()">Create</button>
+
+  </div>
+
+
+</ion-content>
