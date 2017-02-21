@@ -1,5 +1,5 @@
 import { Observe } from '../../interfaces/Observe';
-import { Component, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { State } from '../../interfaces/State';
 import { Activity, ActivityType } from '../../interfaces/Activity';
 
@@ -17,15 +17,15 @@ export class StateService {
     return this.State;
   }
 
-  public SetState(state: State): void {
+  public SetState(state: State): State {
     this.State = state;
     this.updateObservers();
+    return this.State;
   }
 
   updateObservers() {
     for (let o of this.comps) {
       o.Update();
-      console.log(this.State.activities.length);
     }
   }
 
@@ -42,43 +42,35 @@ export class StateService {
       {
         id: 0,
         name: 'Fahrrad fahren',
-        type: ActivityType.main,
-        remove: 'in'
+        type: ActivityType.main
       }, {
         id: 1,
         name: 'Arbeiten',
-        type: ActivityType.main,
-        remove: 'in'
+        type: ActivityType.main
       }, {
         id: 2,
         name: 'Lernen',
-        type: ActivityType.main,
-        remove: 'in'
+        type: ActivityType.main
       }, {
         id: 3,
         name: 'Schlafen',
-        type: ActivityType.main,
-        remove: 'in'
+        type: ActivityType.main
       }, {
         id: 4,
         name: 'Essen',
-        type: ActivityType.main,
-        remove: 'in'
+        type: ActivityType.main
       }, {
         id: 5,
         name: 'Kuchen backen',
-        type: ActivityType.main,
-        remove: 'in'
+        type: ActivityType.main
       }, {
         id: 6,
         name: 'Rauchen',
-        type: ActivityType.main,
-        remove: 'in'
+        type: ActivityType.main
       }, {
         id: 7,
         name: 'Sonstiges',
-        type: ActivityType.etc,
-        remove: 'in'
+        type: ActivityType.etc
       }];
   }
 }

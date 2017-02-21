@@ -9,7 +9,8 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-card *ngFor="let activity of _state.activities" color="{{_state.currentActivity == activity  ? 'secondary' : ''}}" (swipe)="swiped(activity)">
+    <ion-card *ngFor="let activity of _state.activities" color="{{_state.currentActivity == activity  ? 'secondary' : ''}}" (swipe)="deleteActivity($event, activity)"
+      [@isDeleted]>
 
       <ion-card-header>
         {{activity !== undefinde ? activity.name: ''}}

@@ -4,7 +4,6 @@ export class Activity {
   id: number;
   name: string;
   type: ActivityType;
-  remove?: string = 'in';
   static reducer(state: State, mpaction: Action): State {
     switch (mpaction.actionType) {
       case ActionType.add:
