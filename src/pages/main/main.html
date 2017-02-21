@@ -9,13 +9,13 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-card *ngFor="let activity of _state.activities" color="{{_state.currentActivity == activity  ? 'secondary' : ''}}" (swipe)="deleteActivity($event, activity)"
+    <ion-card *ngFor="let activity of _state.activities" color="{{_state.currentActivity == activity  ? 'secondary' : ''}}" (swipe)="deleteActivity($event, activity); $event.preventDefault()"
       [@isDeleted]>
 
       <ion-card-header>
         {{activity !== undefinde ? activity.name: ''}}
 
-        <ion-icon name="{{_state.currentActivity == activity ? 'pause' : 'play'}}" style="float: right" (click)="activityClick(activity)"></ion-icon>
+        <ion-icon name="{{_state.currentActivity == activity ? 'pause' : 'play'}}" style="float: right" (click)="activityClick(activity); $event.preventDefault()"></ion-icon>
       </ion-card-header>
 
     </ion-card>

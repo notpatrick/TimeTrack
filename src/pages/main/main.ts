@@ -2,12 +2,11 @@ import { Observe } from '../../interfaces/Observe';
 import { CreateActivity } from '../createactivity/createactivity';
 import { StateService } from '../../app/services/stateservice';
 import { Action, ActionType } from '../../interfaces/Action';
-import { Activity } from '../../interfaces/Activity';
+import { Activity, ActivityType } from '../../interfaces/Activity';
 import { State } from '../../interfaces/State';
 import { animate, Component, state, style, transition, trigger } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
 
 @Component({
   selector: 'page-main',
@@ -23,16 +22,11 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 
 })
 export class Main extends Observe {
-  activities: FirebaseListObservable<any>;
   private _state: State;
-  constructor(public navCtrl: NavController, public stateService: StateService, public modalCtrl: ModalController, af: AngularFire) {
+  constructor(public navCtrl: NavController, public stateService: StateService, public modalCtrl: ModalController) {
     super();
     this.stateService.addObserver(this);
     this._state = this.stateService.GetState();
-
-    // log in to firebase
-    af.auth.login();
-    this.activities = af.database.list('/activities');
   }
 
   getAction(activity: Activity): Action {
@@ -58,12 +52,10 @@ export class Main extends Observe {
   }
 
   addClick(): void {
-    let modal = this.modalCtrl.create(CreateActivity);
-    modal.present();
-
-    // test firebase db add
-    this.activities.push({ "id": 1, "test": "funktioniert" });
-    console.log(this.activities);
+    let act = new Object();
+    act['name'] = "New activity";
+    act['type'] = ActivityType.main;
+    this.navCtrl.push(CreateActivity, act);
   }
 
   Update(): void {

@@ -1,11 +1,10 @@
 import { State } from '../../interfaces/State';
 import { Observe } from '../../interfaces/Observe';
-import { ViewController } from 'ionic-angular';
 import { Action, ActionType } from '../../interfaces/Action';
 import { Activity, ActivityType } from '../../interfaces/Activity';
 import { StateService } from '../../app/services/stateservice';
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 @Component({
   selector: 'page-createactivity',
@@ -13,13 +12,17 @@ import { NavController } from 'ionic-angular';
 })
 export class CreateActivity extends Observe {
   private _state: State;
-  constructor(public navCtrl: NavController, public stateService: StateService, public viewCtrl: ViewController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public stateService: StateService) {
     super();
     this.stateService.addObserver(this);
     this.typeOptions = [
       'main',
       'etc'
     ];
+    console.log(this.navParams.data);
+    let passedData = this.navParams.data;
+    this.name = passedData.name;
+    this.type = passedData.type;
   }
 
   public name: string;
@@ -38,10 +41,10 @@ export class CreateActivity extends Observe {
     };
     let newState = Activity.reducer(this.stateService.GetState(), action);
     this.stateService.SetState(newState);
-    this.viewCtrl.dismiss();
+    this.navCtrl.pop();
   }
   cancelClick(): void {
-    this.viewCtrl.dismiss();
+    this.navCtrl.pop();
   }
 
   Update(): void {
