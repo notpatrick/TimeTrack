@@ -1,30 +1,41 @@
+import { ActivitiesActions } from '../store/activities/activities.actions';
 import { StateService } from './services/stateservice';
 import { CreateActivity } from '../pages/createactivity/createactivity';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+
+import { NgReduxModule, NgRedux } from '@angular-redux/store';
+import { AppActions } from './app.actions';
+import { ActivitiesService } from '../store/activities/activities.service';
+
 import { MyApp } from './app.component';
-import { Main } from '../pages/main/main';
-import { NeuePage } from '../pages/neue/neue';
+import { MainPage } from '../pages/main/main';
+
 
 @NgModule({
   declarations: [
     MyApp,
-    Main,
-    CreateActivity,
-    NeuePage
+    MainPage,
+    CreateActivity
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    // TODO: add store modules here
+    IonicModule.forRoot(MyApp),
+    NgReduxModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    Main,
-    CreateActivity,
-    NeuePage
+    MainPage,
+    CreateActivity
   ],
-  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler },
-  { provide: StateService, useClass: StateService }]
+  providers: [
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    StateService,
+    AppActions,
+    ActivitiesService,
+    ActivitiesActions
+  ]
 })
 export class AppModule { }
 

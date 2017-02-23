@@ -2,8 +2,14 @@ import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
-import { Main } from '../pages/main/main';
-import { NeuePage } from '../pages/neue/neue';
+import { NgRedux, DevToolsExtension } from '@angular-redux/store';
+import { combineReducers } from 'redux';
+import * as createLogger from 'redux-logger';
+import { AppActions } from './app.actions';
+
+import { activitiesReducer } from '../store/activities/activities.reducer';
+
+import { MainPage } from '../pages/main/main';
 
 
 @Component({
@@ -12,33 +18,42 @@ import { NeuePage } from '../pages/neue/neue';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = Main;
+  rootPage: any = MainPage;
 
   pages: Array<{ title: string, component: any }>;
 
-  constructor(public platform: Platform) {
+  constructor(public platform: Platform, private ngRedux: NgRedux<any>, private actions: AppActions, devTools: DevToolsExtension) {
     this.initializeApp();
 
-    // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Main Page', component: Main },
-      { title: 'Neue Seite', component: NeuePage }
+      { title: 'Main Page', component: MainPage }
     ];
 
+    const rootReducer = combineReducers({
+      // combine reducers here
+      activities: activitiesReducer
+    });
+
+    ngRedux.configureStore(
+      rootReducer,
+      {},
+      [
+        createLogger()
+      ],
+      devTools.isEnabled() ? [devTools.enhancer()] : []);
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
+      // Load initial data
+      this.ngRedux.dispatch(this.actions.loadData());
+
       StatusBar.styleDefault();
       Splashscreen.hide();
     });
   }
 
   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
   }
 }
