@@ -1,6 +1,14 @@
 <ion-header>
   <ion-navbar>
     <ion-title>Create Activity</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="cancel()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="accept()">
+        <ion-icon name="checkmark"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -19,12 +27,4 @@
     </ion-item>
 
   </ion-list>
-
-  <div style="display:flex">
-    <button ion-button color="danger" style="flex-grow:1" (click)="cancelClick()">Cancel</button>
-    <button ion-button color="secondary" style="flex-grow:1" (click)="addClick()">Create</button>
-
-  </div>
-
-
 </ion-content>

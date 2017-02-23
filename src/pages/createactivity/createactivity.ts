@@ -21,14 +21,11 @@ export class CreateActivity {
   public type: string;
   public typeOptions: string[];
 
-  addClick(): void {
+  accept(): void {
     this.navCtrl.pop();
   }
-  cancelClick(): void {
+  cancel(): void {
     this.navCtrl.pop();
-  }
-
-  Update(): void {
   }
 }
 

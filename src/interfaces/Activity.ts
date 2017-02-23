@@ -1,10 +1,11 @@
 export class Activity {
   id: number;
   name: string;
-  type: ActivityType;
+  type: string;
+  icon?: string;
 }
 
-export enum ActivityType {
-  main,
-  etc
+export class ActivityType {
+  static Main = 'Main';
+  static Etc = 'Etc';
 }

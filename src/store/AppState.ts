@@ -9,7 +9,7 @@ export interface AppState {
 
 export const INITIAL_STATE: AppState = {
   activities: [],
-  currentActivity: {}
+  currentActivity: undefined
 } as AppState;
 
 export function rootReducer(state: AppState, action: Action): AppState {
@@ -19,22 +19,18 @@ export function rootReducer(state: AppState, action: Action): AppState {
       currentActivity: state.currentActivity
     });
     case ActivityActions.DELETEACTIVITY: return Object.assign({}, {
-      activities: state.activities.filter(element => element !== (action as PayloadAction).payload),
-      currentActivity: state.currentActivity === (action as PayloadAction).payload ? undefined : state.currentActivity
+      activities: state.activities.filter(element => element.id !== (action as PayloadAction).payload.id),
+      currentActivity: state.currentActivity !== undefined ? state.currentActivity.id === (action as PayloadAction).payload.id ? undefined : state.currentActivity : undefined
     });
-    case ActivityActions.GETALLACTIVITIES:
-      console.log('action', action);
-      return {
-        activities: (action as PayloadAction).payload as Activity[],
-        currentActivity: {
-          id: 1,
-          name: 'Arbeiten',
-          type: ActivityType.etc
-        }
-      } as AppState;
+    case ActivityActions.GETALLACTIVITIES: return Object.assign({}, {
+      activities: (action as PayloadAction).payload as Activity[],
+      currentActivity: undefined
+    });
     case ActivityActions.UPDATEACTIVITY: return state;
-    case ActivityActions.SETCURRENTACTIVITY: return state;
-    case ActivityActions.UNSETCURRENTACTIVITY: return state;
+    case ActivityActions.SETCURRENTACTIVITY: return Object.assign({}, {
+      activities: [...state.activities],
+      currentActivity: (action as PayloadAction).payload === state.currentActivity ? undefined : (action as PayloadAction).payload
+    });
     default: return state;
   }
 }

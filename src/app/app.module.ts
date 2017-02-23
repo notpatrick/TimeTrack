@@ -1,3 +1,4 @@
+import { WebRequestService } from '../providers/WebRequest.provider';
 import { HttpModule } from '@angular/http';
 import { ActivityActions } from '../store/Actions';
 
@@ -32,7 +33,8 @@ import { MainPage } from '../pages/main/main';
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    ActivityActions
+    ActivityActions,
+    WebRequestService
   ]
 })
 export class AppModule { }

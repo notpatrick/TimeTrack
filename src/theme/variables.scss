@@ -26,6 +26,15 @@ $colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4
 // --------------------------------------------------
 // Windows only Sass variables can go here
 // App Theme
+.bar-button-md {
+  margin-left: 0.8rem !important;
+  margin-right: 0.8rem !important;
+}
+
+.bar-button-ios {
+  padding: 0 5px !important;
+}
+
 // --------------------------------------------------
 // Ionic apps can have different themes applied, which can
 // then be future customized. This import comes last

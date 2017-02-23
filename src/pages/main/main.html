@@ -3,25 +3,48 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
+
     <ion-title>Overview</ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="add()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
   <ion-list>
-    <ion-card *ngFor="let activity of activities$ | async" color="{{currentActivity$ == activity  ? 'secondary' : ''}}" (swipe)="deleteActivity($event, activity); $event.preventDefault()"
-      [@isDeleted]>
+    <ion-item-sliding *ngFor="let activity of activities$ | async" #slidingItem>
+      <ion-item [ngSwitch]="activity == (currentActivity$ | async)" padding-right>
+        <ion-icon item-left name="{{activity.icon}}"></ion-icon>
+        <h2>{{activity.name}}</h2>
+        <p>4h 32min</p>
 
-      <ion-card-header>
-        {{activity !== undefined ? activity.name: ''}}
+        <button ion-button clear icon-only item-right color="dark" (click)="start(activity)" *ngSwitchCase="false">
+          <ion-icon name="play"></ion-icon>
+        </button>
+        <button ion-button clear icon-only item-right color="dark" (click)="start(activity)" *ngSwitchCase="true">
+          <ion-icon name="pause"></ion-icon>
+        </button>
+      </ion-item>
 
-        <ion-icon name="{{currentActivity$ == activity ? 'pause' : 'play'}}" style="float: right" (click)="activityClick(activity); $event.preventDefault()"></ion-icon>
-      </ion-card-header>
-
-    </ion-card>
+      <ion-item-options icon-left>
+        <button ion-button color="danger" (click)="delete(activity, slidingItem)">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+        <button ion-button (click)="edit(activity, slidingItem)">
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
-  <ion-fab right bottom>
-    <button ion-fab color="primary" (click)="addClick()">
-      <ion-icon name="add"></ion-icon></button>
-  </ion-fab>
 </ion-content>
