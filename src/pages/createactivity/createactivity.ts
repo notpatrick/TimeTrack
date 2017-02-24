@@ -7,10 +7,6 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class CreateActivity {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.typeOptions = [
-      'main',
-      'etc'
-    ];
     console.log(this.navParams.data);
     let passedData = this.navParams.data;
     this.name = passedData.name;
@@ -19,9 +15,10 @@ export class CreateActivity {
 
   public name: string;
   public type: string;
-  public typeOptions: string[];
+  public icon: string;
 
   accept(): void {
+    // TODO: save request
     this.navCtrl.pop();
   }
   cancel(): void {

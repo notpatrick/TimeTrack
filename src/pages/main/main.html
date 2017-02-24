@@ -21,26 +21,26 @@
   </ion-refresher>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let activity of activities$ | async" #slidingItem>
+    <ion-item-sliding *ngFor="let activity of activities$ | async" #slidingItem (click)="select(activity)">
       <ion-item [ngSwitch]="activity == (currentActivity$ | async)" padding-right>
         <ion-icon item-left name="{{activity.icon}}"></ion-icon>
         <h2>{{activity.name}}</h2>
         <p>4h 32min</p>
 
-        <button ion-button clear icon-only item-right color="dark" (click)="start(activity)" *ngSwitchCase="false">
+        <button ion-button clear icon-only item-right color="dark" (click)="start(activity); $event.stopPropagation()" *ngSwitchCase="false">
           <ion-icon name="play"></ion-icon>
         </button>
-        <button ion-button clear icon-only item-right color="dark" (click)="start(activity)" *ngSwitchCase="true">
+        <button ion-button clear icon-only item-right color="dark" (click)="start(activity); $event.stopPropagation()" *ngSwitchCase="true">
           <ion-icon name="pause"></ion-icon>
         </button>
       </ion-item>
 
       <ion-item-options icon-left>
-        <button ion-button color="danger" (click)="delete(activity, slidingItem)">
+        <button ion-button color="danger" (click)="delete(activity, slidingItem); $event.stopPropagation()">
           <ion-icon name="trash"></ion-icon>
           Delete
         </button>
-        <button ion-button (click)="edit(activity, slidingItem)">
+        <button ion-button (click)="edit(activity, slidingItem); $event.stopPropagation()">
           <ion-icon name="create"></ion-icon>
           Edit
         </button>

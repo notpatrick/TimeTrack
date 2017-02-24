@@ -48,4 +48,7 @@ export class MainPage {
     // TODO: goto create page
     this.navCtrl.push(CreateActivity);
   }
+  select(act: Activity) {
+    this.navCtrl.push(CreateActivity, act);
+  }
 }
