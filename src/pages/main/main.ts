@@ -7,24 +7,45 @@ import { AppState } from '../../store/AppState';
 import { ActivityActions } from '../../store/Actions';
 import { Activity } from '../../interfaces/Activity';
 
-import { Component } from '@angular/core';
+import {
+  animate,
+  AnimationTransitionEvent,
+  Component,
+  keyframes,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 
 @Component({
   selector: 'page-main',
-  templateUrl: 'main.html'
+  templateUrl: 'main.html',
+  animations: [
+    trigger('removed', [
+      transition('* => true', animate(420, keyframes([
+        style({ transform: 'translateX(150%)', offset: 0.8 }),
+        style({ transform: 'scaleY(0)', height: 0, offset: 1 })
+      ]))),
+    ])]
 })
 export class MainPage {
   @select() readonly activities$: Observable<Activity[]>;
-  @select() readonly currentActivity$: Activity;
+  @select() readonly currentActivity$: Observable<Activity>;
   constructor(public navCtrl: NavController, public modalCtrl: ModalController, private actions: ActivityActions,
-    private ngRedux: NgRedux<AppState>) { }
+    private ngRedux: NgRedux<AppState>) {
+  }
 
-  delete(act: Activity, slider: ItemSliding) {
+  startDelete(act: Activity, slider: ItemSliding) {
     // TODO: show alert for confirmation
     slider.close();
-    this.actions.deleteActivity(act);
+    act.removed = 'true';
+  }
+
+  delete(event: AnimationTransitionEvent, act: Activity) {
+    if (event.toState === 'true') this.actions.deleteActivity(act);
   }
 
   edit(act: Activity, slider: ItemSliding) {
@@ -32,7 +53,6 @@ export class MainPage {
     slider.close();
     this.navCtrl.push(CreateActivity, act);
   }
-
   start(act: Activity) {
     this.actions.setCurrentActivity(act);
   }

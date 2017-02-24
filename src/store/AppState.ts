@@ -24,13 +24,22 @@ export function rootReducer(state: AppState, action: Action): AppState {
     });
     case ActivityActions.GETALLACTIVITIES: return Object.assign({}, {
       activities: (action as PayloadAction).payload as Activity[],
-      currentActivity: undefined
+      // TODO: when loading new activities, previous currentactivity is not in new array
+      currentActivity: state.currentActivity
     });
     case ActivityActions.UPDATEACTIVITY: return state;
-    case ActivityActions.SETCURRENTACTIVITY: return Object.assign({}, {
-      activities: [...state.activities],
-      currentActivity: (action as PayloadAction).payload === state.currentActivity ? undefined : (action as PayloadAction).payload
-    });
+    case ActivityActions.SETCURRENTACTIVITY:
+      return Object.assign({}, {
+        activities: [...state.activities],
+        currentActivity: (action as PayloadAction).payload === state.currentActivity ? undefined : (action as PayloadAction).payload
+      });
+    case ActivityActions.ADDSECOND:
+      let newState = Object.assign({}, {
+        activities: [...state.activities],
+        currentActivity: (action as PayloadAction).payload
+      });
+      newState.currentActivity.elapsedSeconds++;
+      return newState;
     default: return state;
   }
 }

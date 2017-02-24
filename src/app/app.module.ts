@@ -1,3 +1,4 @@
+import { TimePipe } from '../pipes/time.pipe';
 import { WebRequestService } from '../providers/WebRequest.provider';
 import { HttpModule } from '@angular/http';
 import { ActivityActions } from '../store/Actions';
@@ -17,7 +18,8 @@ import { MainPage } from '../pages/main/main';
   declarations: [
     MyApp,
     MainPage,
-    CreateActivity
+    CreateActivity,
+    TimePipe
   ],
   imports: [
     // TODO: add store modules here
