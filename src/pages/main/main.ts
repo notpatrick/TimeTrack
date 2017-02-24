@@ -1,64 +1,54 @@
-import { Observe } from '../../interfaces/Observe';
+import { ItemSliding } from 'ionic-angular/umd';
 import { CreateActivity } from '../createactivity/createactivity';
-import { StateService } from '../../app/services/stateservice';
-import { Action, ActionType } from '../../interfaces/Action';
-import { Activity, ActivityType } from '../../interfaces/Activity';
-import { State } from '../../interfaces/State';
-import { animate, Component, state, style, transition, trigger } from '@angular/core';
+import { NgRedux } from '@angular-redux/store/lib/components/ng-redux';
+import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs/Rx';
+import { AppState } from '../../store/AppState';
+import { ActivityActions } from '../../store/Actions';
+import { Activity } from '../../interfaces/Activity';
+
+import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 
 @Component({
   selector: 'page-main',
-  templateUrl: 'main.html',
-  animations: [
-    trigger('isDeleted', [
-      state('void', style({
-        transform: 'translateX(-150%)'
-      })),
-      transition('* => void', animate('420ms ease-in-out'))
-    ])
-  ]
-
+  templateUrl: 'main.html'
 })
-export class Main extends Observe {
-  private _state: State;
-  constructor(public navCtrl: NavController, public stateService: StateService, public modalCtrl: ModalController) {
-    super();
-    this.stateService.addObserver(this);
-    this._state = this.stateService.GetState();
+export class MainPage {
+  @select() readonly activities$: Observable<Activity[]>;
+  @select() readonly currentActivity$: Activity;
+  constructor(public navCtrl: NavController, public modalCtrl: ModalController, private actions: ActivityActions,
+    private ngRedux: NgRedux<AppState>) { }
+
+  delete(act: Activity, slider: ItemSliding) {
+    // TODO: show alert for confirmation
+    slider.close();
+    this.actions.deleteActivity(act);
   }
 
-  getAction(activity: Activity): Action {
-    let action = activity === this.stateService.GetState().currentActivity ? ActionType.deactivate : ActionType.activate;
-    return {
-      actionType: action,
-      card: activity
-    };
-  }
-
-  deleteActivity(event: Event, act: Activity) {
-
-    let action: Action = {
-      actionType: ActionType.remove,
-      card: act
-    };
-    this._state = this.stateService.SetState(Activity.reducer(this.stateService.GetState(), action));
-
-  }
-  activityClick(activity: Activity): void {
-    let action = this.getAction(activity);
-    this.stateService.SetState(State.reducer(this.stateService.GetState(), action));
-  }
-
-  addClick(): void {
-    let act = new Object();
-    act['name'] = "New activity";
-    act['type'] = ActivityType.main;
+  edit(act: Activity, slider: ItemSliding) {
+    // TODO: goto create page
+    slider.close();
     this.navCtrl.push(CreateActivity, act);
   }
 
-  Update(): void {
-    this._state = this.stateService.GetState();
+  start(act: Activity) {
+    this.actions.setCurrentActivity(act);
+  }
+  doRefresh(refresher) {
+
+    let observable = this.actions.getAllActivities();
+    observable.subscribe(
+      success => refresher.complete(),
+      error => console.log(error)
+    );
+  }
+  add(): void {
+    // TODO: goto create page
+    this.navCtrl.push(CreateActivity);
+  }
+  select(act: Activity) {
+    this.navCtrl.push(CreateActivity, act);
   }
 }

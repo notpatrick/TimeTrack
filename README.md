@@ -1,6 +1,6 @@
 # TimeTrack
 
-A simple Ionic 2 time tracking app
+A super simple time tracking app created with Ionic 2
 
 ## Description
 
@@ -14,16 +14,13 @@ Here will be a description...
 
 ## Installation
 
-### Windows
-
 1. Download and install [node](https://nodejs.org/)
 2. Install Cordova and Ionic `$ npm install -g cordova ionic`
-3. Clone the repository
+3. Clone the repository `git clone git@github.com:notpatrick/TimeTrack.git`
 
 ## Build it
 
 ``` bash
-$ cd TimeTrack
 # Install packages
 $ npm install 
 # Serve it to your local browser
