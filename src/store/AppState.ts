@@ -1,6 +1,6 @@
 import { ActivityActions, PayloadAction } from './Actions';
 import { Action } from 'redux';
-import { Activity, ActivityType } from '../interfaces/Activity';
+import { Activity } from '../interfaces/Activity';
 
 export interface AppState {
   activities: Activity[];
@@ -25,21 +25,23 @@ export function rootReducer(state: AppState, action: Action): AppState {
     case ActivityActions.GETALLACTIVITIES: return Object.assign({}, {
       activities: (action as PayloadAction).payload as Activity[],
       // TODO: when loading new activities, previous currentactivity is not in new array
-      currentActivity: state.currentActivity
+      currentActivity: state.currentActivity ? ((action as PayloadAction).payload as Activity[]).find(a => a.id === state.currentActivity.id) : undefined
     });
-    case ActivityActions.UPDATEACTIVITY: return state;
+    case ActivityActions.UPDATEACTIVITY:
+      return Object.assign({}, {
+        activities: state.activities.map(a => {
+          if (a.id === (action as PayloadAction).payload.id) {
+            return Object.assign({}, (action as PayloadAction).payload);
+          }
+          return a;
+        }),
+        currentActivity: state.currentActivity
+      });
     case ActivityActions.SETCURRENTACTIVITY:
       return Object.assign({}, {
         activities: [...state.activities],
         currentActivity: (action as PayloadAction).payload === state.currentActivity ? undefined : (action as PayloadAction).payload
       });
-    case ActivityActions.ADDSECOND:
-      let newState = Object.assign({}, {
-        activities: [...state.activities],
-        currentActivity: (action as PayloadAction).payload
-      });
-      newState.currentActivity.elapsedSeconds++;
-      return newState;
     default: return state;
   }
 }

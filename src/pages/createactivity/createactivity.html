@@ -16,11 +16,13 @@
   <ion-list>
 
     <ion-item>
-      <ion-input type="text" placeholder="Name" [(ngModel)]="name"></ion-input>
+      <ion-label floating>Name</ion-label>
+      <ion-input type="text" [(ngModel)]="Activity.name"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-input type="text" placeholder="Category" [(ngModel)]="type"></ion-input>
+      <ion-label floating>Category</ion-label>
+      <ion-input type="text" [(ngModel)]="Activity.type"></ion-input>
     </ion-item>
 
     <ion-item>

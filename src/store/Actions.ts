@@ -16,7 +16,6 @@ export class ActivityActions {
   static UPDATEACTIVITY = 'UPDATEACTIVITY';
   static SETCURRENTACTIVITY = 'SETCURRENTACTIVITY';
   static UNSETCURRENTACTIVITY = 'UNSETCURRENTACTIVITY';
-  static ADDSECOND = 'ADDSECOND';
 
 
   constructor(private ngRedux: NgRedux<AppState>, private webRequestService: WebRequestService) {
@@ -45,25 +44,14 @@ export class ActivityActions {
   }
 
   updateActivity(activity: Activity) {
-    this.ngRedux.dispatch({ type: ActivityActions.UPDATEACTIVITY, payload: activity });
+    this.webRequestService.update(
+      activity,
+      result => this.ngRedux.dispatch({ type: ActivityActions.UPDATEACTIVITY, payload: result })
+    );
   }
 
   setCurrentActivity(activity: Activity) {
     this.ngRedux.dispatch({ type: ActivityActions.SETCURRENTACTIVITY, payload: activity });
-    this.update(activity);
-  }
-
-  addSecond(activity: Activity) {
-    this.ngRedux.dispatch({ type: ActivityActions.ADDSECOND, payload: activity });
-  }
-
-  update(activity: Activity) {
-    setTimeout(() => {
-      if (this.ngRedux.getState().currentActivity === activity) {
-        this.addSecond(activity);
-        this.update(activity);
-      }
-    }, 1000);
   }
 }
 

@@ -12,13 +12,11 @@ import {
   AnimationTransitionEvent,
   Component,
   keyframes,
-  state,
   style,
   transition,
   trigger
 } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { ModalController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 
 @Component({
   selector: 'page-main',
@@ -34,14 +32,32 @@ import { ModalController } from 'ionic-angular';
 export class MainPage {
   @select() readonly activities$: Observable<Activity[]>;
   @select() readonly currentActivity$: Observable<Activity>;
-  constructor(public navCtrl: NavController, public modalCtrl: ModalController, private actions: ActivityActions,
-    private ngRedux: NgRedux<AppState>) {
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, private actions: ActivityActions, private ngRedux: NgRedux<AppState>) {
   }
 
   startDelete(act: Activity, slider: ItemSliding) {
     // TODO: show alert for confirmation
-    slider.close();
-    act.removed = 'true';
+    let confirm = this.alertCtrl.create({
+      title: `Really delete ${act.name}?`,
+      message: 'All tracked info will be lost!',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+            slider.close();
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+
+            slider.close();
+            act.removed = 'true';
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
   delete(event: AnimationTransitionEvent, act: Activity) {
@@ -49,15 +65,13 @@ export class MainPage {
   }
 
   edit(act: Activity, slider: ItemSliding) {
-    // TODO: goto create page
     slider.close();
-    this.navCtrl.push(CreateActivity, act);
+    this.navCtrl.push(CreateActivity, { activity: act });
   }
   start(act: Activity) {
     this.actions.setCurrentActivity(act);
   }
   doRefresh(refresher) {
-
     let observable = this.actions.getAllActivities();
     observable.subscribe(
       success => refresher.complete(),
@@ -65,10 +79,6 @@ export class MainPage {
     );
   }
   add(): void {
-    // TODO: goto create page
     this.navCtrl.push(CreateActivity);
-  }
-  select(act: Activity) {
-    this.navCtrl.push(CreateActivity, act);
   }
 }

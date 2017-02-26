@@ -32,6 +32,16 @@ export class WebRequestService {
       error => this.handleError);
   }
 
+  update(activity: Activity, action: (result: Activity) => void) {
+    let observable = this.http.put(`${ACTIVITIES_URL}/${activity.id}`, activity)
+      .map(this.extractData)
+      .catch(this.handleError);
+
+    observable.subscribe(
+      activity => action(activity),
+      error => this.handleError);
+  }
+
   delete(activity: Activity, action: () => void) {
     let observable = this.http.delete(`${ACTIVITIES_URL}/${activity.id}`)
       .map(this.extractData)
