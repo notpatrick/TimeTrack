@@ -1,4 +1,3 @@
-import { update } from 'ionic-angular/umd/components/slides/swiper/swiper';
 import { WebRequestService } from '../providers/WebRequest.provider';
 
 import { Activity } from '../interfaces/Activity';

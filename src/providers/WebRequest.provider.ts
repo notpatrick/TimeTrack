@@ -33,7 +33,7 @@ export class WebRequestService {
   }
 
   update(activity: Activity, action: (result: Activity) => void) {
-    let observable = this.http.put(`${ACTIVITIES_URL}/${activity.id}`, activity)
+    let observable = this.http.put(`${ACTIVITIES_URL}${activity.id}`, activity)
       .map(this.extractData)
       .catch(this.handleError);
 
@@ -43,7 +43,7 @@ export class WebRequestService {
   }
 
   delete(activity: Activity, action: () => void) {
-    let observable = this.http.delete(`${ACTIVITIES_URL}/${activity.id}`)
+    let observable = this.http.delete(`${ACTIVITIES_URL}${activity.id}`)
       .map(this.extractData)
       .catch(this.handleError);
 

@@ -1,4 +1,3 @@
-import { ItemSliding } from 'ionic-angular/umd';
 import { CreateActivity } from '../createactivity/createactivity';
 import { NgRedux } from '@angular-redux/store/lib/components/ng-redux';
 import { select } from '@angular-redux/store';
@@ -16,15 +15,14 @@ import {
   transition,
   trigger
 } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, ItemSliding } from 'ionic-angular';
 
 @Component({
   selector: 'page-main',
   templateUrl: 'main.html',
   animations: [
     trigger('removed', [
-      transition('* => true', animate(420, keyframes([
-        style({ transform: 'translateX(150%)', offset: 0.8 }),
+      transition('* => true', animate(150, keyframes([
         style({ transform: 'scaleY(0)', height: 0, offset: 1 })
       ]))),
     ])]
@@ -50,8 +48,6 @@ export class MainPage {
         {
           text: 'Delete',
           handler: () => {
-
-            slider.close();
             act.removed = 'true';
           }
         }
