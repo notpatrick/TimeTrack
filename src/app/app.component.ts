@@ -10,6 +10,7 @@ import * as createLogger from 'redux-logger';
 
 
 import { MainPage } from '../pages/main/main';
+import { StatisticsPage } from '../pages/statistics/statistics';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class MyApp {
     this.initializeApp();
 
     this.pages = [
-      { title: 'Main Page', component: MainPage }
+      { title: 'Main Page', component: MainPage },
+      { title: 'Statistics', component: StatisticsPage }
     ];
 
     ngRedux.configureStore(

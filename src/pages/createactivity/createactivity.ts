@@ -5,11 +5,15 @@ import { ActivityActions } from '../../store/Actions';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
 
+
+
 @Component({
   selector: 'page-createactivity',
   templateUrl: 'createactivity.html'
 })
 export class CreateActivity {
+  iconNames = ['ionic', 'logo-angular', 'heart', 'ionitron', 'happy', 'people', 'person', 'contact', 'apps', 'lock', 'key', 'unlock', 'map', 'navigate', 'pin', 'locate', 'mic', 'musical-notes', 'volume-up', 'microphone', 'cafe', 'calculator', 'bus', 'wine', 'camera', 'image', 'star', 'pin', 'arrow-dropup-circle', 'arrow-back', 'arrow-dropdown', 'arrow-forward', 'cloud', 'sunny', 'umbrella', 'rainy'];
+  selectedIcon = '';
   private Activity: Activity;
   constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController, private actions: ActivityActions, private ngRedux: NgRedux<AppState>) {
     let passedData = this.navParams.data.activity as Activity;
@@ -34,6 +38,10 @@ export class CreateActivity {
   }
   cancel(): void {
     this.navCtrl.pop();
+  }
+
+  iconClick(icon) {
+    this.selectedIcon = icon;
   }
 
   completenessCheck() {

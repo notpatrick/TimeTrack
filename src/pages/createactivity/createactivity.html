@@ -1,18 +1,18 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Create Activity</ion-title>
     <ion-buttons end>
       <button ion-button icon-only clear (click)="cancel()">
-        <ion-icon name="close" color="dark"></ion-icon>
+        <ion-icon name="close"></ion-icon>
       </button>
       <button ion-button icon-only clear (click)="accept()">
-        <ion-icon name="checkmark" color="dark"></ion-icon>
+        <ion-icon name="checkmark"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <ion-list>
 
     <ion-item>
@@ -25,55 +25,15 @@
       <ion-input type="text" [(ngModel)]="Activity.type"></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <button ion-button icon-only clear>
-          <ion-icon name="bicycle" color="dark"></ion-icon>
-        </button>
-          </ion-col>
-          <ion-col>
-            <button ion-button icon-only clear>
-          <ion-icon name="cash" color="dark"></ion-icon>
-        </button>
-          </ion-col>
-          <ion-col>
-            <button ion-button icon-only clear>
-          <ion-icon name="car" color="dark"></ion-icon>
-        </button>
-          </ion-col>
-          <ion-col>
-            <button ion-button icon-only outline>
-          <ion-icon name="school" color="dark"></ion-icon>
-        </button>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <button ion-button icon-only clear>
-          <ion-icon name="body" color="dark"></ion-icon>
-        </button>
-          </ion-col>
-          <ion-col>
-            <button ion-button icon-only clear>
-          <ion-icon name="restaurant" color="dark"></ion-icon>
-        </button>
-          </ion-col>
-          <ion-col>
-            <button ion-button icon-only clear>
-          <ion-icon name="game-controller-a" color="dark"></ion-icon>
-        </button>
-          </ion-col>
-
-          <ion-col>
-            <button ion-button icon-only clear>
-          <ion-icon name="american-football" color="dark"></ion-icon>
-        </button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-
   </ion-list>
+  <ion-item class="icons-selector">
+    <h2>Select an icon</h2>
+    <ion-row>
+      <ion-col *ngFor="let icon of iconNames">
+        <button ion-button  (click)="iconClick(icon)" [outline]="selectedIcon === icon" [clear]="selectedIcon !== icon">
+          <ion-icon name="{{icon}}" color="dark"></ion-icon>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-item>
 </ion-content>

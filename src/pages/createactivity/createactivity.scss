@@ -1,1 +1,13 @@
-page-createactivity {}
+page-createactivity {
+  .icons-selector {
+    ion-row {
+      height: 100%;
+      flex-wrap: wrap;
+    }
+    ion-col {
+      flex: 0 0 25%;
+      max-width: 25%;
+      padding: 10px 5px;
+    }
+  }
+}

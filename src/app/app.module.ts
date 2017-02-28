@@ -12,6 +12,7 @@ import { NgReduxModule } from '@angular-redux/store';
 
 import { MyApp } from './app.component';
 import { MainPage } from '../pages/main/main';
+import { StatisticsPage } from '../pages/statistics/statistics';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { MainPage } from '../pages/main/main';
     MyApp,
     MainPage,
     CreateActivity,
+    StatisticsPage,
     TimePipe
   ],
   imports: [
@@ -31,7 +33,8 @@ import { MainPage } from '../pages/main/main';
   entryComponents: [
     MyApp,
     MainPage,
-    CreateActivity
+    CreateActivity,
+    StatisticsPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
