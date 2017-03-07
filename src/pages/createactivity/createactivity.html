@@ -22,16 +22,16 @@
 
     <ion-item>
       <ion-label floating>Category</ion-label>
-      <ion-input type="text" [(ngModel)]="Activity.type"></ion-input>
+      <ion-input type="text" [(ngModel)]="Activity.category.name"></ion-input>
     </ion-item>
 
   </ion-list>
   <ion-item class="icons-selector">
     <h2>Select an icon</h2>
     <ion-row>
-      <ion-col *ngFor="let icon of iconNames">
-        <button ion-button  (click)="iconClick(icon)" [outline]="selectedIcon === icon" [clear]="selectedIcon !== icon">
-          <ion-icon name="{{icon}}" color="dark"></ion-icon>
+      <ion-col *ngFor="let iconName of iconNames">
+        <button ion-button (click)="iconClick(iconName)" [outline]="Activity.iconname === iconName" [clear]="Activity.iconname !== iconName">
+          <ion-icon name="{{iconName}}" color="dark"></ion-icon>
         </button>
       </ion-col>
     </ion-row>

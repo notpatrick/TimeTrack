@@ -1,11 +1,3 @@
-import { CreateActivity } from '../createactivity/createactivity';
-import { NgRedux } from '@angular-redux/store/lib/components/ng-redux';
-import { select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Rx';
-import { AppState } from '../../store/AppState';
-import { ActivityActions } from '../../store/Actions';
-import { Activity } from '../../interfaces/Activity';
-
 import {
   animate,
   AnimationTransitionEvent,
@@ -13,9 +5,17 @@ import {
   keyframes,
   style,
   transition,
-  trigger
+  trigger,
+  ViewChild
 } from '@angular/core';
-import { NavController, AlertController, ItemSliding } from 'ionic-angular';
+import { AlertController, ItemSliding, NavController, Refresher } from 'ionic-angular';
+
+import { CreateActivity } from '../createactivity/createactivity';
+import Activity from '../../interfaces/Activity';
+import { UserService } from '../../providers/User.provider';
+import { ActivityService } from '../../providers/Activity.provider';
+import { AppStateService } from '../../providers/AppState.provider';
+import { AppState } from '../../interfaces/AppState';
 
 @Component({
   selector: 'page-main',
@@ -28,9 +28,13 @@ import { NavController, AlertController, ItemSliding } from 'ionic-angular';
     ])]
 })
 export class MainPage {
-  @select() readonly activities$: Observable<Activity[]>;
-  @select() readonly currentActivity$: Observable<Activity>;
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, private actions: ActivityActions, private ngRedux: NgRedux<AppState>) {
+  @ViewChild(Refresher) refresher: Refresher;
+  public state: AppState;
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController,
+    public appState: AppStateService,
+    public userService: UserService,
+    public activityService: ActivityService) {
+    this.state = this.appState.state;
   }
 
   startDelete(act: Activity, slider: ItemSliding) {
@@ -57,18 +61,23 @@ export class MainPage {
   }
 
   delete(event: AnimationTransitionEvent, act: Activity) {
-    if (event.toState === 'true') this.actions.deleteActivity(act);
+    if (event.toState === 'true') {
+      this.refresher.state = 'refreshing';
+      this.activityService.delete(act).subscribe(
+        result => this.refresher.complete()
+      );
+    };
   }
 
   edit(act: Activity, slider: ItemSliding) {
     slider.close();
     this.navCtrl.push(CreateActivity, { activity: act });
   }
-  start(act: Activity) {
-    this.actions.setCurrentActivity(act);
+  activityClick(act: Activity) {
+    this.activityService.toggleTimesheet(act);
   }
   doRefresh(refresher) {
-    let observable = this.actions.getAllActivities();
+    let observable = this.activityService.getAll();
     observable.subscribe(
       success => refresher.complete(),
       error => console.log(error)

@@ -1,13 +1,15 @@
-export class Activity {
-  id: number;
-  name: string;
-  type: string;
-  icon: string;
-  elapsedSeconds: number; // real time needed
-  removed: string = 'false';
-}
+import Category from './Category';
+import User from './User';
+import Timesheet from './Timesheet';
 
-export class ActivityType {
-  static Main = 'Main';
-  static Etc = 'Etc';
+export default class Activity {
+  id: string;
+  name: string;
+  iconname: string;
+  category?: Category;
+  user?: User;
+  _id?: string;
+  timesheets?: Timesheet[];
+
+  removed: string = 'false';
 }
