@@ -30,10 +30,7 @@ import { AppState } from '../../interfaces/AppState';
 export class MainPage {
   @ViewChild(Refresher) refresher: Refresher;
   public state: AppState;
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController,
-    public appState: AppStateService,
-    public userService: UserService,
-    public activityService: ActivityService) {
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public appState: AppStateService, public userService: UserService, public activityService: ActivityService) {
     this.state = this.appState.state;
   }
 

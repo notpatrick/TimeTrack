@@ -5,8 +5,9 @@ import { Response, Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import config from '../config';
 
-const ACTIVITIES_URL = 'http://localhost:8080/api/activities/';
+const activitiesRoute = config.activitiesRoute;
 
 @Injectable()
 export class ActivityService {
@@ -14,49 +15,55 @@ export class ActivityService {
   constructor(private http: Http, private appStateService: AppStateService) { }
 
   getAll() {
-    let observable = this.http.get(ACTIVITIES_URL)
+    let observable = this.http.get(activitiesRoute)
       .map(this.extractData)
       .catch(this.handleError);
 
     observable.subscribe(
       results => {
-        console.log(results);
-        this.appStateService.state.activities = Object.assign([], results);
+        this.appStateService.updateState({ activities: [...results] });
       },
       error => this.handleError);
     return observable;
   }
 
   create(activity: Activity) {
-    let observable = this.http.post(ACTIVITIES_URL, activity)
+    let observable = this.http.post(activitiesRoute, activity)
       .map(this.extractData)
       .catch(this.handleError);
 
     observable.subscribe(
       result => {
-        this.appStateService.state.activities = [...this.appStateService.state.activities, result];
+        let currentState = this.appStateService.getStateCopy();
+        let updatedActivities = [...currentState.activities, result];
+        this.appStateService.updateState({ activities: updatedActivities });
       },
       error => this.handleError);
   }
 
   update(activity: Activity) {
-    let observable = this.http.put(`${ACTIVITIES_URL}${activity.id}`, activity)
+    let observable = this.http.put(`${activitiesRoute}${activity.id}`, activity)
       .map(this.extractData)
       .catch(this.handleError);
 
     observable.subscribe(
       result => {
-        this.appStateService.state.activities = this.appStateService.state.activities.map((a) => {
+        let currentState = this.appStateService.getStateCopy();
+        let updatedActivities = currentState.activities.map((a) => {
           if (a.id !== result.id) return a;
           return Object.assign({}, result);
         });
+        this.appStateService.updateState({ activities: updatedActivities });
       },
       error => this.handleError);
   }
 
   delete(activity: Activity) {
-    this.appStateService.state.activities = this.appStateService.state.activities.filter((a) => a.id !== activity.id);
-    let observable = this.http.delete(`${ACTIVITIES_URL}${activity.id}`)
+    let currentState = this.appStateService.getStateCopy();
+    let filteredActivities = currentState.activities.filter((a) => a.id !== activity.id);
+    this.appStateService.updateState({ activities: filteredActivities });
+
+    let observable = this.http.delete(`${activitiesRoute}${activity.id}`)
       .map(this.extractData)
       .catch(this.handleError);
 
@@ -68,27 +75,54 @@ export class ActivityService {
     return observable;
   }
 
-
-  getById(id: string, action: (result: Activity) => void) {
-    let observable = this.http.get(`${ACTIVITIES_URL}/${id}`)
+  updateById(id: string) {
+    let observable = this.http.get(`${activitiesRoute}/${id}`)
       .map(this.extractData)
       .catch(this.handleError);
 
     observable.subscribe(
       activity => {
-        return activity;
+        let currentState = this.appStateService.getStateCopy();
+        let updatedActivities = currentState.activities.map((a) => a.id === activity.id ? activity : a);
+        this.appStateService.updateState({ activities: updatedActivities });
       },
       error => this.handleError);
     return observable;
   }
-
   toggleTimesheet(activity: Activity) {
-    // TODO: create new timesheet/close timesheet
-    if (this.appStateService.state.currentActivity === activity) {
-      this.appStateService.state.currentActivity = undefined;
-    } else {
-      this.appStateService.state.currentActivity = activity;
-    }
+    let request = this.createTimesheetRequest(activity);
+
+    // Open new / close timesheet for activity
+    let observable = this.http.post(request.route, request.requestBody)
+      .map(this.extractData)
+      .catch(this.handleError);
+
+    observable.subscribe(
+      result => {
+        this.setCurrent(result);
+      },
+      error => this.handleError);
+  }
+
+  setCurrent(activity: Activity) {
+    let currentState = this.appStateService.getStateCopy();
+    let updatedActivities = currentState.activities.map((a) => a.id === activity.id ? activity : a);
+    let wasSameActivity = currentState.currentActivity ? currentState.currentActivity.id === activity.id : false;
+
+    this.appStateService.updateState({ currentActivity: wasSameActivity ? undefined : activity, activities: updatedActivities });
+  }
+
+  // Creates an object with request route and a body which contains the newly selected Activity
+  private createTimesheetRequest(updatedActivity: Activity) {
+    let route = `${activitiesRoute}/track/`;
+    let requestBody = Object.assign({}, { activity: updatedActivity });
+    let date = Date.now();
+    requestBody = Object.assign(requestBody, { date: date });
+
+    return {
+      route: route,
+      requestBody: requestBody
+    };
   }
 
   private extractData(res: Response) {

@@ -10,6 +10,8 @@ import { UserService } from '../providers/User.provider';
 import { ActivityService } from '../providers/Activity.provider';
 import { AppStateService } from '../providers/AppState.provider';
 
+import config from '../config';
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -38,7 +40,7 @@ export class MyApp {
     this.platform.ready().then(() => {
       // Load initial data
       this.activityService.getAll();
-      this.userService.getById('107e386a-5e78-4408-a654-444bc99f5128');
+      this.userService.getById(config.testUser);
 
       StatusBar.styleDefault();
       Splashscreen.hide();

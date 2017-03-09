@@ -10,6 +10,7 @@ export default class Activity {
   user?: User;
   _id?: string;
   timesheets?: Timesheet[];
+  timeInMs?: number;
 
   removed: string = 'false';
 }

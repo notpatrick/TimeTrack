@@ -22,10 +22,7 @@ export class CreateActivity {
 
   public state: AppState;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController,
-    public appState: AppStateService,
-    public userService: UserService,
-    public activityService: ActivityService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController, public appState: AppStateService, public userService: UserService, public activityService: ActivityService) {
     this.state = this.appState.state;
     // Parse navigation parameter as Activity
     let passedData = this.navParams.data.activity as Activity;
@@ -36,9 +33,9 @@ export class CreateActivity {
       // New Activity if parse failed
       this.Activity = new Activity();
       this.Activity.category = {
-        id: '40dc66f0-3cd5-47f5-acd2-b3af8284f4c1',
-        name: 'Kategorie1',
-        _id: '58bf3600e50e14287a3ae741'
+        id: '5f064788-3aa1-45b7-89d7-81ee012feb6c',
+        name: 'Privates',
+        _id: '58c135f656fce80bdc84a604'
       };
       this.Activity.user = this.state.user;
     }
