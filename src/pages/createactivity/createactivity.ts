@@ -1,15 +1,12 @@
 import { NavController, NavParams, ToastController } from 'ionic-angular';
-import { Observable } from 'rxjs/Rx';
 import { Component } from '@angular/core';
 
-import Category from '../../interfaces/Category';
-import User from '../../interfaces/User';
 import Activity from '../../interfaces/Activity';
+import { AppState } from '../../interfaces/AppState';
 
 import { AppStateService } from '../../providers/AppState.provider';
 import { UserService } from '../../providers/User.provider';
 import { ActivityService } from '../../providers/Activity.provider';
-import { AppState } from '../../interfaces/AppState';
 
 @Component({
   selector: 'page-createactivity',
