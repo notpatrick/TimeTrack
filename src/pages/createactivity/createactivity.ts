@@ -63,10 +63,10 @@ export class CreateActivity {
 
   completenessCheck() {
     let hasName = this.Activity.name !== undefined;
-    let hasType = this.Activity.category !== undefined;
+    let hasIcon = this.Activity.iconname !== undefined;
 
-    let message1 = 'A name is required.';
-    let message2 = 'A type is required.';
+    let message1 = 'Please enter a name';
+    let message2 = 'Please select an icon';
 
     if (!hasName) {
       let toast = this.toastCtrl.create({
@@ -75,7 +75,7 @@ export class CreateActivity {
       });
       toast.present();
       return false;
-    } else if (!hasType) {
+    } else if (!hasIcon) {
       let toast = this.toastCtrl.create({
         message: message2,
         duration: 3000

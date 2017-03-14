@@ -1,3 +1,4 @@
+import { ToggleObject } from '../interfaces/ToggleObject';
 import { AppStateService } from './AppState.provider';
 import Activity from '../interfaces/Activity';
 import { Injectable } from '@angular/core';
@@ -13,8 +14,11 @@ const activitiesRoute = config.activitiesRoute;
 
 @Injectable()
 export class ActivityService {
-
-  constructor(private http: Http, private appStateService: AppStateService) { }
+  toggleQueue: ToggleObject[];
+  sending: boolean;
+  constructor(private http: Http, private appStateService: AppStateService) {
+    this.toggleQueue = [];
+  }
 
   getAll() {
     let observable = this.http
@@ -97,9 +101,7 @@ export class ActivityService {
     return observable;
   }
 
-  toggleTimesheet(activity: Activity) {
-    // create a request
-    let request = this.createTimesheetRequest(activity);
+  toggleTimesheet(request: ToggleObject) {
     // Open new / close timesheet for activity
     let observable = this.http
       .post(request.path, request.body)
@@ -108,24 +110,42 @@ export class ActivityService {
     // subscribe to response
     observable.subscribe(
       result => {
-        this.setCurrent(result);
+        this.sendNext(result, true);
       },
       error => this.handleError);
   }
 
+  sendNext(activity: Activity, isResponse: boolean = false) {
+    const obs = this.getAll();
+    obs.subscribe(() => {
+      this.toggleQueue.shift();
+      this.setCurrent(activity);
+      if (this.toggleQueue.length > 0) {
+        this.toggleTimesheet(this.toggleQueue[0]);
+      } else {
+        this.sending = false;
+      }
+    });
+  }
+
+  addToQueue(activity: Activity) {
+    let req = this.createTimesheetRequest(activity);
+    this.toggleQueue.push(req);
+
+    if (!this.sending) {
+      this.toggleTimesheet(req);
+      this.sending = true;
+    }
+  }
+
   setCurrent(activity: Activity) {
-    let currentState = this.appStateService.getStateCopy();
-    // create updated activities list
-    let updatedActivities = currentState.activities.map((a) => a.id === activity.id ? activity : a);
-    // check if activity is the currentActivity
-    let wasSameActivity = currentState.currentActivity ? currentState.currentActivity.id === activity.id : false;
-    // update appstate
-    this.appStateService.updateState({ currentActivity: wasSameActivity ? undefined : activity, activities: updatedActivities });
+
+    this.appStateService.updateState({});
   }
 
   // Creates an object with request route and a body which contains the newly selected Activity
-  private createTimesheetRequest(activity: Activity) {
-    let path = `${activitiesRoute}/track/`;
+  private createTimesheetRequest(activity: Activity): ToggleObject {
+    let path = `${activitiesRoute}track/`;
     // create new timesheet
     let date = new Date(Date.now());
     let timesheet = this.createTimesheet(activity, date);
@@ -163,6 +183,7 @@ export class ActivityService {
 
   private extractData(res: Response) {
     let body = res.json();
+    // console.log(body);
     return body || {};
   }
 
@@ -175,7 +196,7 @@ export class ActivityService {
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
-    console.error('error', errMsg);
+    console.error(error);
     return Observable.throw(errMsg);
   }
 }

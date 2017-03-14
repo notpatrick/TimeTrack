@@ -31,8 +31,8 @@ export class MyApp {
     this.initializeApp();
 
     this.pages = [
-      { title: 'Main Page', component: MainPage },
-      { title: 'Statistics', component: StatisticsPage }
+      { title: 'Dashboard', component: MainPage },
+      // { title: 'Statistics', component: StatisticsPage }
     ];
   }
 

@@ -71,7 +71,7 @@ export class MainPage {
     this.navCtrl.push(CreateActivity, { activity: act });
   }
   activityClick(act: Activity) {
-    this.activityService.toggleTimesheet(act);
+    this.activityService.addToQueue(act);
   }
   doRefresh(refresher) {
     let observable = this.activityService.getAll();

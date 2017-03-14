@@ -12,12 +12,12 @@ export class AppStateService {
   updateState(updateObject: any) {
     // updateObject is a partial AppState with updated values
     this.state = Object.assign(this.state, updateObject);
-    if (this.state.currentActivity) {
-      this.state.currentActivity = this.state.activities.find(activity => activity.id === this.state.currentActivity.id);
-    } else {
-      this.state.currentActivity = AppStateService.checkForOpenTimesheets(this.state.activities);
-    }
 
+    if (this.state.activities) {
+      // set currentActivity if an activity with open timesheets is present
+      let found = AppStateService.checkForOpenTimesheets(this.state.activities);
+      this.state.currentActivity = this.state.activities.find(a => found ? a.id === found.id : undefined);
+    }
     // if there are any activities update their times
     if (this.state.activities && this.state.activities.length > 0) {
       this.state.activities
@@ -27,15 +27,16 @@ export class AppStateService {
 
   static checkForOpenTimesheets(activities) {
     if (!activities || activities.length <= 0) return undefined;
+    let result = undefined;
     activities.forEach((activity) => {
       activity.timesheets
         .forEach((timesheet) => {
           if (!timesheet.endDate) {
-            return activity;
+            result = activity;
           }
         });
     });
-    return undefined;
+    return result;
   }
   updateTimer() {
     return setInterval(() => {
